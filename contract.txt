@@ -1,0 +1,38 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract war {
+    mapping(address=>bool) player;
+
+    enum soldier {
+        warrior,
+        archer,
+        assassin
+    }
+    //warrior can beat assassin
+    //archer can beat warrior
+    //assassin can beat archer
+    //choose your army to defeat me
+
+    function randomArmy() internal view returns (soldier) {
+        return soldier(uint256(keccak256(abi.encodePacked(block.timestamp)))%3);
+    }
+
+
+    function respond(soldier yours) external {
+        soldier randomarmy = randomArmy();
+
+        if (yours == soldier.warrior && randomarmy == soldier.assassin) {
+            player[msg.sender] = true;
+        } else if (yours == soldier.archer && randomarmy == soldier.warrior) {
+            player[msg.sender] = true;
+        } else if (yours == soldier.assassin && randomarmy == soldier.archer) {
+            player[msg.sender] = true;
+        }
+    }
+
+    function check() external view returns(bool) {
+        return player[msg.sender];
+    }
+}
+
